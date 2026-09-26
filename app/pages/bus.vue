@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { BusStop } from '~/types/BusStop';
-import type { Geojson } from '~/types/Geojson';
 
 definePageMeta({
 	title: 'Bus',
@@ -10,26 +9,25 @@ useSeoMeta({
 	title: 'Bus',
 });
 
+const route = useRoute();
+
 const router = useRouter();
 
-const { data: geojson } = await useLazyFetch('/bus-stops.json', {
-	server: false,
-});
+const { geojson, allStops } = useBusStops();
 
 const style = 'https://tiles.openfreemap.org/styles/liberty';
-const center = {
+
+const zoom = ref<number>(10);
+const center = ref<{
+	lng: number;
+	lat: number;
+}>({
 	lng: 103.8501,
 	lat: 1.2897,
-};
-const zoom = 10;
+});
 
 const circleColor = ref<string>('#006A66');
 const outlineColor = ref<string>('#6F7978');
-
-const allStops = computed(() => {
-	const data = geojson.value as Geojson | null;
-	return data?.features?.map((f) => f.properties) ?? [];
-});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function handleStopClick(e: any) {
@@ -51,7 +49,26 @@ function handleStopClick(e: any) {
 	});
 }
 
+function zoomToStop(queryStop: string) {
+	const stop = geojson.value?.features.find((f) => f.properties.code === queryStop);
+	if (stop) {
+		center.value = {
+			lng: stop.geometry.coordinates[0]!,
+			lat: stop.geometry.coordinates[1]!,
+		};
+		zoom.value = 15;
+	}
+}
+
+onBeforeRouteUpdate((to) => {
+	if (to.query.stop && typeof to.query.stop === 'string') {
+		zoomToStop(to.query.stop);
+	}
+});
+
 onMounted(() => {
+	if (route.query.stop && typeof route.query.stop === 'string') zoomToStop(route.query.stop);
+
 	const content = document.querySelector('#content');
 	if (content) {
 		const style = window.getComputedStyle(content);
@@ -78,8 +95,8 @@ onMounted(() => {
 			<m3e-heading class="heading" variant="headline" size="large">Bus Stops</m3e-heading>
 			<BusStop v-if="allStops && allStops.length !== 0" :stops="allStops" />
 			<ClientOnly>
-				<MglMap :map-style="style" :center="center" :zoom="zoom">
-					<MglGeoJsonSource v-if="geojson" source-id="stops" :data="geojson">
+				<MglMap v-if="geojson" :map-style="style" :center="center" :zoom="zoom">
+					<MglGeoJsonSource source-id="stops" :data="toRaw(geojson)">
 						<MglCircleLayer
 							layer-id="stops"
 							:paint="{
