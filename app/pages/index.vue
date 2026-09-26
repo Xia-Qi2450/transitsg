@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import PinnedBusCard from '~/components/bus/PinnedBusCard.vue';
+import { getPinnedBusStops } from '~/db/bus-db';
+import type { BusStop } from '~/types/BusStop';
 import type { TrafficIncident } from '~~/shared/types/TrafficIncident';
 import type { TrainServiceMessage } from '~~/shared/types/TrainServiceMessage';
 
@@ -15,11 +18,28 @@ const { data: trainServiceMessages } = await useFetch<TrainServiceMessage[]>(
 );
 
 const { data: trafficIncidents } = await useFetch<TrafficIncident[]>('/api/traffic-incidents');
+
+const pinnedBusStops = ref<BusStop[]>([]);
+
+onMounted(async () => {
+	pinnedBusStops.value = await getPinnedBusStops();
+});
 </script>
 
 <template>
 	<div class="bg">
 		<div class="pg">
+			<m3e-heading
+				v-if="pinnedBusStops && pinnedBusStops.length !== 0"
+				class="heading"
+				variant="headline"
+				size="large"
+				>Pinned Bus Stops</m3e-heading
+			>
+			<div v-if="pinnedBusStops && pinnedBusStops.length !== 0" class="pinned-stops">
+				<PinnedBusCard v-for="stop in pinnedBusStops" :key="stop.code" :stop="stop" />
+			</div>
+
 			<m3e-heading class="heading" variant="headline" size="large"
 				>Service Alerts</m3e-heading
 			>
@@ -80,5 +100,13 @@ const { data: trafficIncidents } = await useFetch<TrafficIncident[]>('/api/traff
 
 .heading {
 	color: var(--md-sys-color-on-surface);
+}
+
+.pinned-stops {
+	display: grid;
+	gap: 16px;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	grid-template-rows: auto;
+	width: 100%;
 }
 </style>

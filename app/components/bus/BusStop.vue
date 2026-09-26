@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { addPinnedBusStop, deletePinnedBusStop, getPinnedBusStops } from '~/db/bus-db';
 import type { BusStop } from '~/types/BusStop';
 
 const props = defineProps<{
@@ -12,6 +13,7 @@ const route = useRoute();
 const stop = ref<BusStop | null>(null);
 const arrivals = ref<BusArrival[]>([]);
 const now = ref<number>(Date.now());
+const isPinned = ref<boolean>(false);
 
 let timeInterval: ReturnType<typeof setInterval> | null = null;
 
@@ -37,10 +39,30 @@ function hasPassedArrival(a: BusArrival) {
 	return now.value - arrivalTime > 30000;
 }
 
-watch(stop, async (s) => {
-	if (!s) return;
-	await refreshArrivals(s);
-});
+async function togglePin() {
+	if (!stop.value) {
+		return;
+	}
+
+	if (isPinned.value) {
+		await deletePinnedBusStop(stop.value.code);
+	} else {
+		await addPinnedBusStop(toRaw(stop.value));
+	}
+
+	isPinned.value = !isPinned.value;
+}
+
+watch(
+	stop,
+	async (s) => {
+		if (!s) return;
+		await refreshArrivals(s);
+		isPinned.value = (await getPinnedBusStops()).map((stop) => stop.code).includes(s.code);
+		console.log('Is pinned:', isPinned.value);
+	},
+	{ immediate: true },
+);
 
 onBeforeRouteUpdate((to) => {
 	if (to.query.stop && typeof to.query.stop === 'string') {
@@ -48,7 +70,7 @@ onBeforeRouteUpdate((to) => {
 	}
 });
 
-onMounted(() => {
+onMounted(async () => {
 	if (route.query.stop && typeof route.query.stop === 'string') {
 		stop.value = getStop(stops.value, route.query.stop);
 	}
@@ -73,9 +95,15 @@ onBeforeUnmount(() => {
 
 <template>
 	<m3e-card v-if="stop">
-		<m3e-heading slot="header" variant="title" size="large">{{ stop.name }}</m3e-heading>
+		<div slot="header" class="header">
+			<m3e-heading variant="title" size="large">{{ stop.name }}</m3e-heading>
+			<m3e-icon-button @click="togglePin()">
+				<Icon v-if="isPinned" name="material-symbols:keep" />
+				<Icon v-else name="material-symbols:keep-outline" />
+			</m3e-icon-button>
+		</div>
 		<div slot="content" class="content">
-			<span>{{ stop.road }}</span>
+			<span>{{ stop.road }} ({{ stop.code }})</span>
 			<m3e-expansion-panel class="arrivals-panel">
 				<span slot="header">Bus arrivals</span>
 				<m3e-list v-if="arrivals && arrivals.length !== 0" variant="segmented">
@@ -151,5 +179,12 @@ onBeforeUnmount(() => {
 	color: var(--md-sys-color-secondary);
 	width: fit-content;
 	height: fit-content;
+}
+
+.header {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
 }
 </style>
