@@ -9,7 +9,8 @@
 		"preview": "nuxt preview",
 		"postinstall": "nuxt prepare",
 		"format": "oxfmt app/ server/",
-		"scripts:cache-bus-stops": "tsx --env-file .env scripts/bus-stops.ts"
+		"scripts:cache-bus-stops": "tsx --env-file .env scripts/bus-stops.ts",
+		"scripts:cache-gtfs": "tsx --env-file .env scripts/gtfs-schedule-train.ts"
 	},
 	"dependencies": {
 		"@m3e/web": "^2.8.2",
@@ -19,13 +20,16 @@
 		"@takumi-rs/core": "^2.14.0",
 		"date-fns": "^4.4.0",
 		"eslint": "^10.11.0",
+		"gtfs-realtime-bindings": "^2.2.0",
 		"idb": "^8.0.3",
 		"nuxt": "^4.5.2",
 		"nuxt-maplibre": "^1.2.2",
+		"unzipper": "^0.12.5",
 		"vue": "^3.5.43",
 		"vue-router": "^5.3.1"
 	},
 	"devDependencies": {
+		"@types/unzipper": "^0.10.11",
 		"oxfmt": "^0.70.0",
 		"tsx": "^4.23.15"
 	}
