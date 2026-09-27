@@ -90,7 +90,7 @@ export default defineNuxtConfig({
 			cleanupOutdatedCaches: true,
 			clientsClaim: true,
 			skipWaiting: true,
-			navigateFallback: '/index.html',
+			navigateFallback: '/',
 		},
 		devOptions: {
 			enabled: true,

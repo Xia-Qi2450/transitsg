@@ -97,14 +97,14 @@ onBeforeUnmount(() => {
 	<m3e-card v-if="stop">
 		<div slot="header" class="header">
 			<m3e-heading variant="title" size="large">{{ stop.name }}</m3e-heading>
-			<m3e-icon-button @click="togglePin()">
+			<m3e-icon-button v-vibrate @click="togglePin()">
 				<Icon v-if="isPinned" name="material-symbols:keep" />
 				<Icon v-else name="material-symbols:keep-outline" />
 			</m3e-icon-button>
 		</div>
 		<div slot="content" class="content">
 			<span>{{ stop.road }} ({{ stop.code }})</span>
-			<m3e-expansion-panel class="arrivals-panel">
+			<m3e-expansion-panel v-vibrate class="arrivals-panel">
 				<span slot="header">Bus arrivals</span>
 				<m3e-list v-if="arrivals && arrivals.length !== 0" variant="segmented">
 					<m3e-list-item v-for="arrival in visibleArrivals" :key="arrival.ServiceNo">

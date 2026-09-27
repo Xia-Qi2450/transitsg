@@ -132,6 +132,7 @@ onMounted(() => {
 						/>
 
 						<MglCircleLayer
+							v-vibrate
 							layer-id="stops"
 							:filter="['!', ['has', 'point_count']]"
 							:paint="{

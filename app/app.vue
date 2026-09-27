@@ -53,6 +53,7 @@ const routePath = computed(() => {
 							<m3e-list-action
 								v-for="stop in searchSuggestions"
 								:key="stop.code"
+								v-vibrate
 								@click="goToStop(stop.code)"
 							>
 								{{ stop.name }}
@@ -65,11 +66,16 @@ const routePath = computed(() => {
 		<div class="bottom">
 			<ClientOnly>
 				<m3e-nav-rail class="nav-rail">
-					<m3e-nav-item :selected.prop="routePath === '/'" @click="router.push('/')">
+					<m3e-nav-item
+						v-vibrate
+						:selected.prop="routePath === '/'"
+						@click="router.push('/')"
+					>
 						<Icon slot="icon" name="material-symbols:home-outline" />
 						Home
 					</m3e-nav-item>
 					<m3e-nav-item
+						v-vibrate
 						:selected.prop="routePath.startsWith('/bus')"
 						@click="router.push('/bus')"
 					>
@@ -77,6 +83,7 @@ const routePath = computed(() => {
 						Bus
 					</m3e-nav-item>
 					<m3e-nav-item
+						v-vibrate
 						:selected.prop="routePath.startsWith('/mrt')"
 						@click="router.push('/mrt')"
 					>
@@ -90,11 +97,16 @@ const routePath = computed(() => {
 
 			<ClientOnly>
 				<m3e-nav-bar class="nav-bar" mode="compact">
-					<m3e-nav-item :selected.prop="routePath === '/'" @click="router.push('/')">
+					<m3e-nav-item
+						v-vibrate
+						:selected.prop="routePath === '/'"
+						@click="router.push('/')"
+					>
 						<Icon slot="icon" name="material-symbols:home-outline" />
 						Home
 					</m3e-nav-item>
 					<m3e-nav-item
+						v-vibrate
 						:selected.prop="routePath.startsWith('/bus')"
 						@click="router.push('/bus')"
 					>
@@ -102,6 +114,7 @@ const routePath = computed(() => {
 						Bus
 					</m3e-nav-item>
 					<m3e-nav-item
+						v-vibrate
 						:selected.prop="routePath.startsWith('/mrt')"
 						@click="router.push('/mrt')"
 					>

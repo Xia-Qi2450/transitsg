@@ -37,7 +37,12 @@ onMounted(async () => {
 				>Pinned Bus Stops</m3e-heading
 			>
 			<div v-if="pinnedBusStops && pinnedBusStops.length !== 0" class="pinned-stops">
-				<PinnedBusCard v-for="stop in pinnedBusStops" :key="stop.code" :stop="stop" />
+				<PinnedBusCard
+					v-for="stop in pinnedBusStops"
+					:key="stop.code"
+					v-vibrate
+					:stop="stop"
+				/>
 			</div>
 
 			<m3e-heading class="heading" variant="headline" size="large"
