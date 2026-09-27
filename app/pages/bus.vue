@@ -28,6 +28,7 @@ const center = ref<{
 
 const circleColor = ref<string>('#006A66');
 const outlineColor = ref<string>('#6F7978');
+const textColor = ref<string>('#ffffff');
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function handleStopClick(e: any) {
@@ -75,6 +76,7 @@ onMounted(() => {
 
 		const primaryVar = style.getPropertyValue('--md-sys-color-primary').trim();
 		const outlineVar = style.getPropertyValue('--md-sys-color-outline').trim();
+		const onPrimaryVar = style.getPropertyValue('--md-sys-color-on-primary').trim();
 
 		if (primaryVar) {
 			console.log('Primary variable:', primaryVar);
@@ -84,6 +86,11 @@ onMounted(() => {
 		if (outlineVar) {
 			console.log('Outline variable:', outlineVar);
 			outlineColor.value = outlineVar;
+		}
+
+		if (onPrimaryVar) {
+			console.log('On primary variable:', onPrimaryVar);
+			textColor.value = onPrimaryVar;
 		}
 	}
 });
@@ -96,9 +103,37 @@ onMounted(() => {
 			<BusStop v-if="allStops && allStops.length !== 0" :stops="allStops" />
 			<ClientOnly>
 				<MglMap v-if="geojson" :map-style="style" :center="center" :zoom="zoom">
-					<MglGeoJsonSource source-id="stops" :data="toRaw(geojson)">
+					<MglGeoJsonSource
+						source-id="stops"
+						:data="toRaw(geojson)"
+						:cluster="true"
+						:cluster-radius="24"
+					>
+						<MglCircleLayer
+							layer-id="stops-cluster"
+							:filter="['has', 'point_count']"
+							:paint="{
+								'circle-color': circleColor,
+								'circle-radius': 12,
+								'circle-stroke-width': 1,
+								'circle-stroke-color': outlineColor,
+							}"
+						/>
+						<MglSymbolLayer
+							layer-id="stops-cluster-count"
+							:filter="['has', 'point_count']"
+							:layout="{
+								'text-field': '{point_count_abbreviated}',
+								'text-size': 12,
+							}"
+							:paint="{
+								'text-color': textColor,
+							}"
+						/>
+
 						<MglCircleLayer
 							layer-id="stops"
+							:filter="['!', ['has', 'point_count']]"
 							:paint="{
 								'circle-color': circleColor,
 								'circle-radius': 12,
