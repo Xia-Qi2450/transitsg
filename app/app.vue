@@ -173,8 +173,8 @@ const routePath = computed(() => {
 
 @media (max-width: 768px) {
 	.bottom {
-		display: flex;
-		flex-direction: column;
+		display: grid;
+		grid-template-rows: calc(100svh - 150px) auto;
 	}
 
 	.search-bar {
