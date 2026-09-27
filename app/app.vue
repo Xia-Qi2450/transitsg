@@ -111,6 +111,7 @@ const routePath = computed(() => {
 				</m3e-nav-bar>
 			</ClientOnly>
 		</div>
+		<VitePwaManifest />
 	</div>
 </template>
 

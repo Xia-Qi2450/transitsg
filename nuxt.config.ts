@@ -1,32 +1,100 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-				compatibilityDate: '2025-07-15',
-				devtools: { enabled: true },
-				modules: [
-				 '@nuxt/eslint',
-				 '@nuxt/icon',
-				 '@nuxtjs/seo',
-				 'nuxt-maplibre',
-				 '@vueuse/nuxt',
-				],
+	compatibilityDate: '2025-07-15',
+	devtools: { enabled: true },
+	modules: [
+		'@nuxt/eslint',
+		'@nuxt/icon',
+		'@nuxtjs/seo',
+		'nuxt-maplibre',
+		'@vueuse/nuxt',
+		'@vite-pwa/nuxt',
+	],
 
-				routeRules: {
-								'/': { prerender: true },
+	routeRules: {
+		'/': { prerender: true },
+	},
+
+	site: {
+		name: 'transitsg',
+	},
+
+	app: {
+		head: {
+			link: [
+				{
+					rel: 'icon',
+					type: 'image/png',
+					href: '/icon.png',
 				},
-
-				site: {
-								name: 'transitsg',
+				{
+					rel: 'icon',
+					type: 'image/x-icon',
+					href: '/favicon.ico',
 				},
+			],
+		},
+	},
 
-				css: ['~/assets/css/main.css'],
+	css: ['~/assets/css/main.css'],
 
-				future: {
-								compatibilityVersion: 4,
+	future: {
+		compatibilityVersion: 4,
+	},
+
+	vue: {
+		compilerOptions: {
+			isCustomElement: (tag) => tag.startsWith('m3e-'),
+		},
+	},
+
+	pwa: {
+		registerType: 'autoUpdate',
+		strategies: 'generateSW',
+		manifest: {
+			short_name: 'transitsg',
+			name: 'transitsg',
+			description:
+				'Singapore bus arrivals, bus routes, train service alerts all in one web app using the LTA DataMall API.',
+			icons: [
+				{
+					src: 'logo.png',
+					sizes: '1000x1000',
+					type: 'image/png',
+					purpose: 'any',
 				},
-
-				vue: {
-								compilerOptions: {
-												isCustomElement: (tag) => tag.startsWith('m3e-'),
-								},
+				{
+					src: 'logo_maskable.png',
+					sizes: '1000x1000',
+					type: 'image/png',
+					purpose: 'maskable',
 				},
+				{
+					src: 'logo_maskable.png',
+					sizes: '1000x1000',
+					type: 'image/png',
+					purpose: 'monochrome',
+				},
+			],
+			start_url: '/',
+			display: 'standalone',
+			theme_color: '#F4FBF9',
+			background_color: '#F4FBF9',
+			categories: ['travel', 'navigation', 'transportation', 'utilities'],
+		},
+		includeAssets: ['public/*'],
+		workbox: {
+			globPatterns: ['**/*.{html,css,js,png,svg,ico,json}'],
+			globDirectory: 'dist',
+			cacheId: 'v1.0.1',
+			cleanupOutdatedCaches: true,
+			clientsClaim: true,
+			skipWaiting: true,
+			navigateFallback: '/index.html',
+		},
+		devOptions: {
+			enabled: true,
+			type: 'module',
+		},
+	},
 });

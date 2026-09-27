@@ -3,7 +3,8 @@ import type { BusStop } from '~/types/BusStop';
 
 export async function searchBusStops(stops: BusStop[], query: string): Promise<BusStop[]> {
 	if (query.trim().length === 0) {
-		return await getPinnedBusStops();
+		const pinned = await getPinnedBusStops();
+		if (pinned.length > 0) return pinned;
 	}
 
 	return stops
