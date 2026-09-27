@@ -141,6 +141,7 @@ const routePath = computed(() => {
 }
 
 .nav-bar {
+	display: none;
 	flex-shrink: 0;
 	background-color: var(--md-sys-color-surface-container);
 }
