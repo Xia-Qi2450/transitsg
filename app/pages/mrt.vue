@@ -4,7 +4,7 @@ definePageMeta({
 });
 
 useSeoMeta({
-	title: 'MFG',
+	title: 'MRT',
 });
 </script>
 

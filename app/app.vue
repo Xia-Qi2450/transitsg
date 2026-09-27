@@ -170,6 +170,7 @@ const routePath = computed(() => {
 .app-bar-title {
 	font-size: 1.6rem;
 	margin: 0 16px;
+	color: var(--md-sys-color-on-surface);
 }
 
 @media (max-width: 768px) {
