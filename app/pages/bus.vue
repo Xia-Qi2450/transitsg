@@ -61,6 +61,14 @@ function zoomToStop(queryStop: string) {
 	}
 }
 
+function handlePreciseLocation(pos: GeolocationPosition) {
+	center.value = {
+		lng: pos.coords.longitude,
+		lat: pos.coords.latitude,
+	};
+	zoom.value = 15;
+}
+
 onBeforeRouteUpdate((to) => {
 	if (to.query.stop && typeof to.query.stop === 'string') {
 		zoomToStop(to.query.stop);
@@ -100,7 +108,11 @@ onMounted(() => {
 	<div class="bg">
 		<div class="pg">
 			<m3e-heading class="heading" variant="headline" size="large">Bus Stops</m3e-heading>
-			<BusStop v-if="allStops && allStops.length !== 0" :stops="allStops" />
+			<BusStop
+				v-if="allStops && allStops.length !== 0"
+				:stops="allStops"
+				@precise-location="handlePreciseLocation"
+			/>
 			<ClientOnly>
 				<MglMap v-if="geojson" :map-style="style" :center="center" :zoom="zoom">
 					<MglGeoJsonSource

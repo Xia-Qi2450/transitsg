@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import { addPinnedBusStop, deletePinnedBusStop, getPinnedBusStops } from '~/db/bus-db';
 import type { BusStop } from '~/types/BusStop';
+import { M3eSnackbar } from '@m3e/web/snackbar';
 
 const props = defineProps<{
 	stops: BusStop[];
 }>();
 
 const { stops } = toRefs(props);
+
+const emit = defineEmits<{
+	preciseLocation: [pos: GeolocationPosition];
+}>();
 
 const route = useRoute();
 
@@ -51,6 +56,15 @@ async function togglePin() {
 	}
 
 	isPinned.value = !isPinned.value;
+}
+
+async function zoomToPreciseLocation() {
+	const location = await getCurrentLocation();
+	if (location) {
+		emit('preciseLocation', location);
+	} else {
+		M3eSnackbar.open('Geolocation API not supported by browser');
+	}
 }
 
 watch(
@@ -139,6 +153,12 @@ onBeforeUnmount(() => {
 		</m3e-heading>
 		<div slot="content" class="content">
 			<span>Select a stop from the map below to view bus arrival times and more</span>
+		</div>
+		<div slot="actions">
+			<m3e-button v-vibrate variant="text" @click="zoomToPreciseLocation()">
+				<Icon slot="icon" name="material-symbols:my-location-outline" />
+				Use precise location
+			</m3e-button>
 		</div>
 	</m3e-card>
 </template>
