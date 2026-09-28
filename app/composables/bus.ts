@@ -1,13 +1,9 @@
-import { useSettings } from '~/composables/settings';
 import type { BusStop } from '~/types/BusStop';
-import { GeolocateControl, type Map } from 'maplibre-gl';
 
 export function useBus() {
 	const route = useRoute();
 
 	const router = useRouter();
-
-	const { settings } = useSettings();
 
 	const style = 'https://tiles.openfreemap.org/styles/liberty';
 
@@ -19,8 +15,6 @@ export function useBus() {
 		lng: 103.8501,
 		lat: 1.2897,
 	});
-
-	const map = useTemplateRef('map');
 
 	const circleColor = ref<string>('#006A66');
 	const outlineColor = ref<string>('#6F7978');
@@ -45,29 +39,6 @@ export function useBus() {
 			},
 		});
 	}
-
-	watch(
-		settings,
-		async (newSettings) => {
-			if (newSettings.usePreciseLocation && route.name !== 'bus-stop') {
-				const geolocate = new GeolocateControl({
-					positionOptions: { enableHighAccuracy: true },
-					trackUserLocation: true,
-					showUserLocation: true,
-					showAccuracyCircle: true,
-				});
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				const maplibreMap: Map = (map.value as any).map;
-				maplibreMap.addControl(geolocate);
-
-				// IMPORTANT: Small delay to ensure that maplibre has added the control then zoom in
-				setTimeout(() => {
-					geolocate.trigger();
-				}, 10);
-			}
-		},
-		{ immediate: true, deep: true },
-	);
 
 	onMounted(() => {
 		const content = document.querySelector('#content');

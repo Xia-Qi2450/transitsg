@@ -157,15 +157,17 @@ onBeforeUnmount(() => {
 			<span>Select a stop from the map below to view bus arrival times and more</span>
 		</div>
 		<div slot="actions">
-			<m3e-button
-				v-if="!settings.usePreciseLocation"
-				v-vibrate
-				variant="text"
-				@click="enablePreciseLocation()"
-			>
-				<Icon slot="icon" name="material-symbols:my-location-outline" />
-				Use precise location
-			</m3e-button>
+			<ClientOnly>
+				<m3e-button
+					v-if="!settings.usePreciseLocation"
+					v-vibrate
+					variant="text"
+					@click="enablePreciseLocation()"
+				>
+					<Icon slot="icon" name="material-symbols:my-location-outline" />
+					Use precise location
+				</m3e-button>
+			</ClientOnly>
 		</div>
 	</m3e-card>
 </template>

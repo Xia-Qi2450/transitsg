@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Geojson } from '~/types/Geojson';
+import { GeolocateControl, type Map } from 'maplibre-gl';
 
 definePageMeta({
 	title: 'Bus',
@@ -21,7 +22,10 @@ useSeoMeta({
 	ogSiteName: 'transitsg - all your Singapore transit needs in one app',
 });
 
-const { style, zoom, center, circleColor, outlineColor, textColor, handleStopClick } = useBus();
+const map = useTemplateRef('map');
+
+const { style, zoom, center, circleColor, outlineColor, textColor, route, handleStopClick } =
+	useBus();
 
 const { settings, refreshPreciseLocation, setPreciseLocationStatus } = useSettings();
 
@@ -35,6 +39,36 @@ async function enablePreciseLocation() {
 		await setPreciseLocationStatus(false);
 	}
 }
+
+function addGeolocateControl() {
+	const geolocate = new GeolocateControl({
+		positionOptions: { enableHighAccuracy: true },
+		trackUserLocation: true,
+		showUserLocation: true,
+		showAccuracyCircle: true,
+	});
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const maplibreMap: Map = (map.value as any).map;
+	maplibreMap.addControl(geolocate);
+
+	if (route.name !== 'bus-stop') {
+		// IMPORTANT: Small delay to ensure that maplibre has added the control then zoom in
+		setTimeout(() => {
+			geolocate.trigger();
+		}, 10);
+	}
+}
+
+watch(
+	settings,
+	async (newSettings) => {
+		if (newSettings.usePreciseLocation) {
+			console.log('New user precise location:', newSettings.usePreciseLocation);
+			addGeolocateControl();
+		}
+	},
+	{ immediate: true, deep: true },
+);
 
 onMounted(async () => {
 	await refreshPreciseLocation();
