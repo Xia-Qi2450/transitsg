@@ -24,7 +24,7 @@ async function getDb(): Promise<IDBPDatabase<unknown>> {
 export async function getPinnedBusStops(): Promise<BusStop[]> {
 	const db = await getDb();
 	const pinned = db.getAll('pinnedBusStops');
-	return pinned;
+	return pinned || [];
 }
 
 export async function addPinnedBusStop(stop: BusStop) {

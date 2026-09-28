@@ -11,6 +11,8 @@ const { allStops } = useBusStops();
 
 const { isMobile } = useMobile();
 
+const { init } = useSettings();
+
 const searchInput = useTemplateRef<HTMLInputElement>('searchInput');
 
 const searchSuggestions = ref<BusStop[]>([]);
@@ -30,6 +32,10 @@ function goToStop(code: string) {
 
 const routePath = computed(() => {
 	return route.path.toLowerCase() || '';
+});
+
+onMounted(async () => {
+	await init();
 });
 </script>
 

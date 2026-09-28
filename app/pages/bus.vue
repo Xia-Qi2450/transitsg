@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { useSettings } from '~/composables/settings';
 import type { BusStop } from '~/types/BusStop';
+import { GeolocateControl, type Map } from 'maplibre-gl';
 
 definePageMeta({
 	title: 'Bus',
@@ -15,6 +17,8 @@ const router = useRouter();
 
 const { geojson, allStops } = useBusStops();
 
+const { settings } = useSettings();
+
 const style = 'https://tiles.openfreemap.org/styles/liberty';
 
 const zoom = ref<number>(10);
@@ -25,6 +29,8 @@ const center = ref<{
 	lng: 103.8501,
 	lat: 1.2897,
 });
+
+const map = useTemplateRef('map');
 
 const circleColor = ref<string>('#006A66');
 const outlineColor = ref<string>('#6F7978');
@@ -61,13 +67,28 @@ function zoomToStop(queryStop: string) {
 	}
 }
 
-function handlePreciseLocation(pos: GeolocationPosition) {
-	center.value = {
-		lng: pos.coords.longitude,
-		lat: pos.coords.latitude,
-	};
-	zoom.value = 15;
-}
+watch(
+	settings,
+	async (newSettings) => {
+		if (newSettings.usePreciseLocation) {
+			const geolocate = new GeolocateControl({
+				positionOptions: { enableHighAccuracy: true },
+				trackUserLocation: true,
+				showUserLocation: true,
+				showAccuracyCircle: true,
+			});
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			const maplibreMap: Map = (map.value as any).map;
+			maplibreMap.addControl(geolocate);
+
+			// IMPORTANT: Small delay to ensure that maplibre has added the control then zoom in
+			setTimeout(() => {
+				geolocate.trigger();
+			}, 10);
+		}
+	},
+	{ immediate: true, deep: true },
+);
 
 onBeforeRouteUpdate((to) => {
 	if (to.query.stop && typeof to.query.stop === 'string') {
@@ -108,13 +129,9 @@ onMounted(() => {
 	<div class="bg">
 		<div class="pg">
 			<m3e-heading class="heading" variant="headline" size="large">Bus Stops</m3e-heading>
-			<BusStop
-				v-if="allStops && allStops.length !== 0"
-				:stops="allStops"
-				@precise-location="handlePreciseLocation"
-			/>
+			<BusStop v-if="allStops && allStops.length !== 0" :stops="allStops" />
 			<ClientOnly>
-				<MglMap v-if="geojson" :map-style="style" :center="center" :zoom="zoom">
+				<MglMap v-if="geojson" ref="map" :map-style="style" :center="center" :zoom="zoom">
 					<MglGeoJsonSource
 						source-id="stops"
 						:data="toRaw(geojson)"
