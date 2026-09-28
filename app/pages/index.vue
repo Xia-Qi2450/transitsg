@@ -11,6 +11,16 @@ definePageMeta({
 
 useSeoMeta({
 	title: 'Home',
+	description:
+		'Check alerts, bus timings, and MRT tools with the transitsg, a free and open-source web app made by (ing) Studios.',
+	ogTitle: 'Home | transitsg',
+	ogUrl: 'https://transitsg.ingstudios.dev',
+	ogDescription:
+		'Check alerts, bus timings. and MRT tools with the transitsg, a free and open-source web app made by (ing) Studios.',
+	ogImage: 'https://transitsg.ingstudios.dev/og.png',
+	ogImageWidth: 1200,
+	ogImageHeight: 630,
+	ogSiteName: 'transitsg - all your Singapore transit needs in one app',
 });
 
 const { data: trainServiceMessages } = await useFetch<TrainServiceMessage[]>(

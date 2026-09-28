@@ -14,6 +14,8 @@ const route = useRoute();
 
 const { settings, setPreciseLocationStatus } = useSettings();
 
+const stopId = computed(() => route.params.stop);
+
 const stop = ref<BusStop | null>(null);
 const arrivals = ref<BusArrival[]>([]);
 const now = ref<number>(Date.now());
@@ -30,7 +32,7 @@ async function refreshArrivals(s: BusStop) {
 
 	arrivals.value = await $fetch('/api/bus-arrivals', {
 		method: 'GET',
-		query: {
+		params: {
 			stopCode: s.code,
 		},
 	});
@@ -79,14 +81,14 @@ watch(
 );
 
 onBeforeRouteUpdate((to) => {
-	if (to.query.stop && typeof to.query.stop === 'string') {
-		stop.value = getStop(stops.value, to.query.stop);
+	if (typeof to.params.stop === 'string') {
+		stop.value = getStop(stops.value, to.params.stop);
 	}
 });
 
 onMounted(async () => {
-	if (route.query.stop && typeof route.query.stop === 'string') {
-		stop.value = getStop(stops.value, route.query.stop);
+	if (typeof stopId.value === 'string') {
+		stop.value = getStop(stops.value, stopId.value);
 	}
 
 	timeInterval = setInterval(async () => {

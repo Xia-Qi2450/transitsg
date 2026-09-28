@@ -13,6 +13,8 @@ export default defineNuxtConfig({
 
 	routeRules: {
 		'/': { prerender: true },
+		'/bus': { prerender: true },
+		'/mrt': { prerender: true },
 	},
 
 	site: {

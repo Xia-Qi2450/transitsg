@@ -1,22 +1,22 @@
 import { getLocationPreference, setLocationPreference } from '~/db/settings-db';
 
-const settings = ref<{
-	usePreciseLocation?: boolean;
-}>({});
-
-async function setPreciseLocationStatus(enabled: boolean) {
-	settings.value.usePreciseLocation = enabled;
-	await setLocationPreference(enabled);
-}
-
 export function useSettings() {
-	async function init() {
+	const settings = ref<{
+		usePreciseLocation?: boolean;
+	}>({});
+
+	async function setPreciseLocationStatus(enabled: boolean) {
+		settings.value.usePreciseLocation = enabled;
+		await setLocationPreference(enabled);
+	}
+
+	async function refreshPreciseLocation() {
 		settings.value.usePreciseLocation = await getLocationPreference();
 	}
 
 	return {
 		settings,
-		init,
+		refreshPreciseLocation,
 		setPreciseLocationStatus,
 	};
 }

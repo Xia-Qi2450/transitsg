@@ -15,8 +15,8 @@ const router = useRouter();
 		actionable
 		@click="
 			router.push({
-				name: 'bus',
-				query: {
+				name: 'bus-stop',
+				params: {
 					stop: stop.code,
 				},
 			})

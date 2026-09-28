@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { BusStop } from './types/BusStop';
+import type { Geojson } from './types/Geojson';
 
 const route = useRoute();
 
@@ -7,11 +8,14 @@ const router = useRouter();
 
 const { isDark } = useTheme();
 
-const { allStops } = useBusStops();
+const { data: geojson } = await useFetch<Geojson>('/api/bus-stops');
+
+const allStops = computed(() => {
+	console.log('Initializing all stops:', geojson.value);
+	return geojson.value?.features?.map((f) => f.properties) ?? [];
+});
 
 const { isMobile } = useMobile();
-
-const { init } = useSettings();
 
 const searchInput = useTemplateRef<HTMLInputElement>('searchInput');
 
@@ -23,8 +27,8 @@ async function startSearch() {
 
 function goToStop(code: string) {
 	router.push({
-		name: 'bus',
-		query: {
+		name: 'bus-stop',
+		params: {
 			stop: code,
 		},
 	});
@@ -32,10 +36,6 @@ function goToStop(code: string) {
 
 const routePath = computed(() => {
 	return route.path.toLowerCase() || '';
-});
-
-onMounted(async () => {
-	await init();
 });
 </script>
 
@@ -82,7 +82,9 @@ onMounted(async () => {
 					</m3e-nav-item>
 					<m3e-nav-item
 						v-vibrate
-						:selected.prop="routePath.startsWith('/bus')"
+						:selected.prop="
+							routePath.startsWith('/bus') || routePath.startsWith('/stop')
+						"
 						@click="router.push('/bus')"
 					>
 						<Icon slot="icon" name="material-symbols:directions-bus-outline" />
@@ -113,7 +115,9 @@ onMounted(async () => {
 					</m3e-nav-item>
 					<m3e-nav-item
 						v-vibrate
-						:selected.prop="routePath.startsWith('/bus')"
+						:selected.prop="
+							routePath.startsWith('/bus') || routePath.startsWith('/stop')
+						"
 						@click="router.push('/bus')"
 					>
 						<Icon slot="icon" name="material-symbols:directions-bus-outline" />

@@ -5,6 +5,16 @@ definePageMeta({
 
 useSeoMeta({
 	title: 'MRT',
+	description:
+		'Use MRT tools on transitsg, a free and open-source web app made by (ing) Studios.',
+	ogTitle: 'MRT | transitsg',
+	ogUrl: 'https://transitsg.ingstudios.dev/mrt',
+	ogDescription:
+		'Use MRT tools on transitsg, a free and open-source web app made by (ing) Studios.',
+	ogImage: 'https://transitsg.ingstudios.dev/og_mrt.png',
+	ogImageWidth: 1200,
+	ogImageHeight: 630,
+	ogSiteName: 'transitsg - all your Singapore transit needs in one app',
 });
 </script>
 

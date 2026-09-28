@@ -2,42 +2,70 @@
 import type { Geojson } from '~/types/Geojson';
 
 definePageMeta({
-	title: 'Bus',
+	title: 'Bus Stop',
+	name: 'bus-stop',
 });
 
 const { data: geojson } = await useFetch<Geojson>('/api/bus-stops');
 
+const allStops = computed(() => {
+	console.log('Initializing all stops:', geojson.value);
+	return geojson.value?.features?.map((f) => f.properties) ?? [];
+});
+
+const { route, style, zoom, center, circleColor, outlineColor, textColor, handleStopClick } =
+	useBus();
+
+const stopId = computed(() => (typeof route.params.stop === 'string' ? route.params.stop : null));
+
+const stop = computed(() => {
+	if (!stopId.value || !allStops.value || allStops.value.length === 0) return null;
+	return getStop(allStops.value, stopId.value);
+});
+
 useSeoMeta({
-	title: 'Bus',
-	description:
-		'Check bus timings and bus stops on transitsg, a free and open-source web app made by (ing) Studios.',
-	ogTitle: 'MRT | transitsg',
-	ogUrl: 'https://transitsg.ingstudios.dev/bus',
-	ogDescription:
-		'Check bus timings and bus stops on transitsg, a free and open-source web app made by (ing) Studios.',
+	title: () => (stop.value ? stop.value.name : 'Bus'),
+	description: () =>
+		stop.value
+			? `View bus stop ${stop.value.name} on transitsg, a free and open-source web app made by (ing) Studios.`
+			: 'Check bus timings and bus stops on transitsg, a free and open-source web app made by (ing) Studios.',
+	ogTitle: () => (stop.value ? `${stop.value.name} | transitsg` : 'Bus | transitsg'),
+	ogUrl: () =>
+		stop.value
+			? `https://transitsg.ingstudios.dev/stop/${stop.value.code}`
+			: 'https://transitsg.ingstudios.dev/bus',
+	ogDescription: () =>
+		stop.value
+			? `View bus stop ${stop.value.name} on transitsg, a free and open-source web app made by (ing) Studios.`
+			: 'Check bus timings and bus stops on transitsg, a free and open-source web app made by (ing) Studios.',
 	ogImage: 'https://transitsg.ingstudios.dev/og_bus.png',
 	ogImageWidth: 1200,
 	ogImageHeight: 630,
 	ogSiteName: 'transitsg - all your Singapore transit needs in one app',
 });
 
-const { style, zoom, center, circleColor, outlineColor, textColor, handleStopClick } = useBus();
-
-const { settings, refreshPreciseLocation, setPreciseLocationStatus } = useSettings();
-
-async function enablePreciseLocation() {
-	console.log('Use precise location:', settings.value.usePreciseLocation);
-	const location = await getCurrentLocation();
-	if (location) {
-		await setPreciseLocationStatus(true);
-	} else {
-		M3eSnackbar.open('Geolocation API not supported by browser');
-		await setPreciseLocationStatus(false);
+function zoomToStop(queryStop: string) {
+	console.log('Geojson:', geojson.value);
+	const stop = geojson.value?.features.find((f) => f.properties.code === queryStop);
+	if (stop) {
+		center.value = {
+			lng: stop.geometry.coordinates[0]!,
+			lat: stop.geometry.coordinates[1]!,
+		};
+		zoom.value = 15;
 	}
 }
 
-onMounted(async () => {
-	await refreshPreciseLocation();
+onBeforeRouteUpdate((to) => {
+	if (typeof to.params.stop === 'string') {
+		zoomToStop(to.params.stop);
+	}
+});
+
+onMounted(() => {
+	if (typeof stopId.value === 'string') {
+		zoomToStop(stopId.value);
+	}
 });
 </script>
 
@@ -45,27 +73,7 @@ onMounted(async () => {
 	<div class="bg">
 		<div class="pg">
 			<m3e-heading class="heading" variant="headline" size="large">Bus Stops</m3e-heading>
-			<m3e-card>
-				<m3e-heading slot="header" variant="title" size="large">
-					Select a stop to view timings
-				</m3e-heading>
-				<div slot="content" class="content">
-					<span>Select a stop from the map below to view bus arrival times and more</span>
-				</div>
-				<div slot="actions">
-					<ClientOnly>
-						<m3e-button
-							v-if="!settings.usePreciseLocation"
-							v-vibrate
-							variant="text"
-							@click="enablePreciseLocation()"
-						>
-							<Icon slot="icon" name="material-symbols:my-location-outline" />
-							Use precise location
-						</m3e-button>
-					</ClientOnly>
-				</div>
-			</m3e-card>
+			<BusStop v-if="allStops && allStops.length !== 0" :stops="allStops" />
 			<ClientOnly>
 				<MglMap v-if="geojson" ref="map" :map-style="style" :center="center" :zoom="zoom">
 					<MglGeoJsonSource
