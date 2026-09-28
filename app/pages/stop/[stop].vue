@@ -5,6 +5,7 @@ import { GeolocateControl, type Map } from 'maplibre-gl';
 definePageMeta({
 	title: 'Bus Stop',
 	name: 'bus-stop',
+	alias: ['/bus'],
 });
 
 const { data: geojson } = await useFetch<Geojson>('/api/bus-stops');
@@ -72,7 +73,7 @@ function addGeolocateControl() {
 	const maplibreMap: Map = (map.value as any).map;
 	maplibreMap.addControl(geolocate);
 
-	if (route.name !== 'bus-stop') {
+	if (!stopId.value) {
 		// IMPORTANT: Small delay to ensure that maplibre has added the control then zoom in
 		setTimeout(() => {
 			geolocate.trigger();

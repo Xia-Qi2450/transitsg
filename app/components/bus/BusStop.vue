@@ -12,7 +12,7 @@ const { stops } = toRefs(props);
 
 const route = useRoute();
 
-const { settings, setPreciseLocationStatus } = useSettings();
+const { settings, refreshPreciseLocation, setPreciseLocationStatus } = useSettings();
 
 const stopId = computed(() => route.params.stop);
 
@@ -102,6 +102,10 @@ onMounted(async () => {
 			await refreshArrivals(stop.value);
 		}
 	}, 30000);
+});
+
+onMounted(async () => {
+	await refreshPreciseLocation();
 });
 
 onBeforeUnmount(() => {

@@ -101,7 +101,9 @@ const routePath = computed(() => {
 				</m3e-nav-rail>
 			</ClientOnly>
 
-			<NuxtPage class="page" />
+			<NuxtLayout>
+				<NuxtPage :page-key="(route) => route.name as string" class="page" />
+			</NuxtLayout>
 
 			<ClientOnly>
 				<m3e-nav-bar class="nav-bar" mode="compact">
