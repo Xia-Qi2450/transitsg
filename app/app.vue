@@ -191,12 +191,15 @@ const routePath = computed(() => {
 	--m3e-search-bar-container-color: var(--md-sys-color-surface);
 	--m3e-search-view-container-color: var(--md-sys-color-surface);
 	margin: 8px 0;
+	box-sizing: border-box;
 }
 
 .app-bar-title {
 	font-size: 1.6rem;
 	margin: 0 16px;
 	color: var(--md-sys-color-on-surface);
+	width: 10svw;
+	box-sizing: border-box;
 }
 
 @media (max-width: 768px) {
