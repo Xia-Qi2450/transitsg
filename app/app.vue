@@ -93,12 +93,12 @@ const routePath = computed(() => {
 					<m3e-nav-item
 						v-vibrate
 						:selected.prop="
-							routePath.startsWith('/routes') || routePath.startsWith('/route')
+							routePath.startsWith('/services') || routePath.startsWith('/service')
 						"
-						@click="router.push('/routes')"
+						@click="router.push('/service')"
 					>
 						<Icon slot="icon" name="material-symbols:directions-bus-outline" />
-						Routes
+						Services
 					</m3e-nav-item>
 					<m3e-nav-item
 						v-vibrate
@@ -138,12 +138,12 @@ const routePath = computed(() => {
 					<m3e-nav-item
 						v-vibrate
 						:selected.prop="
-							routePath.startsWith('/routes') || routePath.startsWith('/route')
+							routePath.startsWith('/services') || routePath.startsWith('/service')
 						"
-						@click="router.push('/routes')"
+						@click="router.push('/services')"
 					>
 						<Icon slot="icon" name="material-symbols:directions-bus-outline" />
-						Routes
+						Services
 					</m3e-nav-item>
 					<m3e-nav-item
 						v-vibrate

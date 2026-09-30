@@ -1,15 +1,15 @@
 <script setup lang="ts">
 definePageMeta({
-	title: 'Bus Route',
-	name: 'bus-route',
-	alias: '/routes',
+	title: 'Bus Service',
+	name: 'bus-service',
+	alias: '/service',
 });
 </script>
 
 <template>
 	<div class="bg">
 		<div class="pg">
-			<m3e-heading class="heading" variant="headline" size="large">Bus Routes</m3e-heading>
+			<m3e-heading class="heading" variant="headline" size="large">Bus Services</m3e-heading>
 		</div>
 	</div>
 </template>

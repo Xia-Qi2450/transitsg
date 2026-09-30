@@ -3,7 +3,7 @@ export default defineEventHandler(async (event) => {
 
 	const { serviceNumber, skip } = getQuery<{
 		serviceNumber: string;
-		skip: number;
+		skip?: number;
 	}>(event);
 
 	const data = await $fetch('https://datamall2.mytransport.sg/ltaodataservice/BusServices', {
