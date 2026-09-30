@@ -10,7 +10,8 @@
 		"postinstall": "nuxt prepare",
 		"format": "oxfmt app/ server/",
 		"scripts:cache-bus-stops": "tsx --env-file .env scripts/bus-stops.ts",
-		"scripts:cache-gtfs": "tsx --env-file .env scripts/gtfs-schedule-train.ts"
+		"scripts:cache-gtfs": "tsx --env-file .env scripts/gtfs-schedule-train.ts",
+		"scripts:cache-bus-routes": "tsx --env-file .env scripts/bus-routes.ts"
 	},
 	"dependencies": {
 		"@m3e/web": "^2.8.2",

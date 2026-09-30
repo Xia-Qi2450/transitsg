@@ -3,6 +3,7 @@ import { addPinnedBusStop, deletePinnedBusStop, getPinnedBusStops } from '~/db/b
 import type { BusStop } from '~/types/BusStop';
 import { M3eSnackbar } from '@m3e/web/snackbar';
 import { useSettings } from '~/composables/settings';
+import { vibrate } from '~/plugins/vibrate.client';
 
 const props = defineProps<{
 	stops: BusStop[];
@@ -124,7 +125,7 @@ onBeforeUnmount(() => {
 		</div>
 		<div slot="content" class="content">
 			<span>{{ stop.road }} ({{ stop.code }})</span>
-			<m3e-expansion-panel v-vibrate class="arrivals-panel">
+			<m3e-expansion-panel class="arrivals-panel" @opening="vibrate()">
 				<span slot="header">Bus arrivals</span>
 				<m3e-list v-if="arrivals && arrivals.length !== 0" variant="segmented">
 					<m3e-list-item v-for="arrival in visibleArrivals" :key="arrival.ServiceNo">

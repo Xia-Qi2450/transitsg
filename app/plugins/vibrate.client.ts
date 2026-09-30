@@ -13,6 +13,6 @@ export default defineNuxtPlugin((app) => {
 	});
 });
 
-function vibrate() {
+export function vibrate() {
 	haptics.trigger(defaultPatterns.light);
 }

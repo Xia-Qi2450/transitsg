@@ -87,8 +87,18 @@ const routePath = computed(() => {
 						"
 						@click="router.push('/bus')"
 					>
+						<Icon slot="icon" name="material-symbols:bus-map-pin-outline" />
+						Stops
+					</m3e-nav-item>
+					<m3e-nav-item
+						v-vibrate
+						:selected.prop="
+							routePath.startsWith('/routes') || routePath.startsWith('/route')
+						"
+						@click="router.push('/routes')"
+					>
 						<Icon slot="icon" name="material-symbols:directions-bus-outline" />
-						Bus
+						Routes
 					</m3e-nav-item>
 					<m3e-nav-item
 						v-vibrate
@@ -122,8 +132,18 @@ const routePath = computed(() => {
 						"
 						@click="router.push('/bus')"
 					>
+						<Icon slot="icon" name="material-symbols:bus-map-pin-outline" />
+						Stops
+					</m3e-nav-item>
+					<m3e-nav-item
+						v-vibrate
+						:selected.prop="
+							routePath.startsWith('/routes') || routePath.startsWith('/route')
+						"
+						@click="router.push('/routes')"
+					>
 						<Icon slot="icon" name="material-symbols:directions-bus-outline" />
-						Bus
+						Routes
 					</m3e-nav-item>
 					<m3e-nav-item
 						v-vibrate
