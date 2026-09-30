@@ -2,7 +2,7 @@ import path from 'node:path';
 import fs from 'node:fs/promises';
 import type { BusService } from './types/BusService';
 
-async function cacheBusStops() {
+async function cacheBusServices() {
 	const apiKey = process.env.NUXT_DATAMALL_API_KEY;
 	if (!apiKey || apiKey.length === 0) {
 		console.error('error: LTA DataMall API key missing.');
@@ -46,4 +46,4 @@ async function cacheBusStops() {
 	console.info(`info: fetched and cached ${allServices.length} services`);
 }
 
-cacheBusStops();
+cacheBusServices();

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { addPinnedBusStop, deletePinnedBusStop, getPinnedBusStops } from '~/db/bus-db';
-import type { BusStop } from '~/types/BusStop';
+import type { BusStop } from '~~/shared/types/BusStop';
 import { M3eSnackbar } from '@m3e/web/snackbar';
 import { useSettings } from '~/composables/settings';
 import { vibrate } from '~/plugins/vibrate.client';
@@ -31,7 +31,7 @@ const visibleArrivals = computed(() => {
 async function refreshArrivals(s: BusStop) {
 	console.log('Refreshing arrivals.');
 
-	arrivals.value = await $fetch('/api/bus-arrivals', {
+	arrivals.value = await $fetch<BusArrival[]>('/api/bus-arrivals', {
 		method: 'GET',
 		params: {
 			stopCode: s.code,

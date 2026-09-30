@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import PinnedBusCard from '~/components/bus/PinnedBusCard.vue';
 import { getPinnedBusStops } from '~/db/bus-db';
-import type { BusStop } from '~/types/BusStop';
+import type { BusStop } from '~~/shared/types/BusStop';
 import type { TrafficIncident } from '~~/shared/types/TrafficIncident';
 import type { TrainServiceMessage } from '~~/shared/types/TrainServiceMessage';
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Geojson } from '~/types/Geojson';
+import type { Geojson } from '~~/shared/types/Geojson';
 import { GeolocateControl, type Map } from 'maplibre-gl';
 
 definePageMeta({

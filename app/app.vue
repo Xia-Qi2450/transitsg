@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { BusStop } from './types/BusStop';
-import type { Geojson } from './types/Geojson';
+import type { BusStop } from '~~/shared/types/BusStop';
+import type { Geojson } from '~~/shared/types/Geojson';
 
 const route = useRoute();
 
@@ -14,8 +14,6 @@ const allStops = computed(() => {
 	console.log('Initializing all stops:', geojson.value);
 	return geojson.value?.features?.map((f) => f.properties) ?? [];
 });
-
-const { isMobile } = useMobile();
 
 const searchInput = useTemplateRef<HTMLInputElement>('searchInput');
 
@@ -43,9 +41,6 @@ const routePath = computed(() => {
 	<div id="content" class="content" :class="isDark ? 'dark' : 'light'">
 		<ClientOnly>
 			<m3e-app-bar class="app-bar" centered>
-				<span v-if="!isMobile" slot="leading" class="app-bar-title">{{
-					$route.meta.title
-				}}</span>
 				<div slot="title" class="app-bar-content">
 					<m3e-search-view class="search-bar" contained @query="startSearch()">
 						<!-- eslint-disable vue/html-self-closing -->
@@ -211,14 +206,6 @@ const routePath = computed(() => {
 	--m3e-search-bar-container-color: var(--md-sys-color-surface);
 	--m3e-search-view-container-color: var(--md-sys-color-surface);
 	margin: 8px 0;
-	box-sizing: border-box;
-}
-
-.app-bar-title {
-	font-size: 1.6rem;
-	margin: 0 16px;
-	color: var(--md-sys-color-on-surface);
-	width: 10svw;
 	box-sizing: border-box;
 }
 

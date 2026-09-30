@@ -11,11 +11,7 @@ export default defineNuxtConfig({
 		'@vite-pwa/nuxt',
 	],
 
-	routeRules: {
-		'/': { prerender: true },
-		'/bus': { prerender: true },
-		'/mrt': { prerender: true },
-	},
+	routeRules: {},
 
 	site: {
 		name: 'transitsg',

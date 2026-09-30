@@ -1,22 +1,11 @@
-export default defineEventHandler(async (event) => {
-	const apiKey = process.env.NUXT_DATAMALL_API_KEY;
+import busServices from '~~/public/bus-services.json';
 
-	const { serviceNumber, skip } = getQuery<{
-		serviceNumber: string;
-		skip?: number;
+export default defineEventHandler((event) => {
+	const { service } = getQuery<{
+		service: string;
 	}>(event);
 
-	const data = await $fetch('https://datamall2.mytransport.sg/ltaodataservice/BusServices', {
-		method: 'GET',
-		headers: {
-			Accept: 'application/json',
-			AccountKey: apiKey || '',
-		},
-		query: {
-			ServiceNo: serviceNumber,
-			$skip: skip || 0,
-		},
-	});
+	const services = busServices.filter((s) => s.ServiceNo === service);
 
-	return data;
+	return services;
 });

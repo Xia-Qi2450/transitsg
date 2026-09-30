@@ -1,5 +1,6 @@
-import busStops from '~~/public/bus-stops.json' with { type: 'json' };
+import busStops from '~~/public/bus-stops.json';
+import type { Geojson } from '~~/shared/types/Geojson';
 
 export default defineEventHandler(async () => {
-	return busStops;
+	return busStops as Geojson;
 });
