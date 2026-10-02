@@ -132,7 +132,7 @@ onBeforeUnmount(() => {
 		</div>
 		<div slot="content" class="content">
 			<span>{{ stop.road }} ({{ stop.code }})</span>
-			<m3e-expansion-panel class="arrivals-panel" @opening="vibrate()">
+			<m3e-expansion-panel class="arrivals-panel" @opening="vibrate()" @closing="vibrate()">
 				<span slot="header">Bus arrivals</span>
 				<m3e-action-list v-if="arrivals && arrivals.length !== 0" variant="segmented">
 					<m3e-list-action

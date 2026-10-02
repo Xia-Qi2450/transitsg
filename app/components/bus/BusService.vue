@@ -94,6 +94,7 @@ onMounted(async () => {
 				:key="`${service.ServiceNo}-${service.Direction}`"
 				class="service-panel"
 				@opening="vibrate()"
+				@closing="vibrate()"
 			>
 				<span slot="header">For {{ getStopName(stops, service.DestinationCode) }}</span>
 
