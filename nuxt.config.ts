@@ -83,6 +83,7 @@ export default defineNuxtConfig({
 		includeAssets: ['public/*'],
 		workbox: {
 			globPatterns: ['**/*.{html,css,js,png,svg,ico,json}'],
+			globIgnores: ['**/bus-routes.json'],
 			globDirectory: 'dist',
 			cacheId: '1',
 			cleanupOutdatedCaches: true,
