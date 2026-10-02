@@ -85,7 +85,7 @@ export default defineNuxtConfig({
 			globPatterns: ['**/*.{html,css,js,png,svg,ico,json}'],
 			globIgnores: ['**/bus-routes.json'],
 			globDirectory: 'dist',
-			cacheId: '2',
+			cacheId: '3',
 			cleanupOutdatedCaches: true,
 			clientsClaim: true,
 			skipWaiting: true,

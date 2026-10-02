@@ -138,6 +138,7 @@ onMounted(async () => {
 						<m3e-list-action
 							v-for="(stop, j) in i === 0 ? routeA : routeB"
 							:key="`${stop.BusStopCode}-${i}`"
+							v-vibrate
 							@click="goToStop(stop.BusStopCode)"
 						>
 							<m3e-avatar slot="leading">
