@@ -111,7 +111,11 @@ onMounted(async () => {
 	<div class="bg">
 		<div class="pg">
 			<m3e-heading class="heading" variant="headline" size="large">Bus Stops</m3e-heading>
-			<BusStop v-if="allStops && allStops.length !== 0" :stops="allStops" />
+			<BusStop
+				v-if="allStops && allStops.length !== 0"
+				:stops="allStops"
+				@location="addGeolocateControl()"
+			/>
 			<ClientOnly>
 				<MglMap v-if="geojson" ref="map" :map-style="style" :center="center" :zoom="zoom">
 					<MglGeoJsonSource

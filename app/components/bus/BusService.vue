@@ -45,6 +45,26 @@ onMounted(async () => {
 				class="service-panel"
 			>
 				<span slot="header">For {{ getStopName(stops, service.DestinationCode) }}</span>
+				<m3e-list>
+					<m3e-list-item>
+						<m3e-avatar slot="leading">
+							<Icon name="material-symbols:pin-drop-outline" />
+						</m3e-avatar>
+						From {{ getStopName(stops, service.OriginCode) }}
+					</m3e-list-item>
+					<m3e-list-item>
+						<m3e-avatar slot="leading">
+							<Icon name="material-symbols:bus-railway-outline" />
+						</m3e-avatar>
+						Operated by {{ service.Operator }}
+					</m3e-list-item>
+					<m3e-list-item>
+						<m3e-avatar slot="leading">
+							<Icon name="material-symbols:directions-bus-outline" />
+						</m3e-avatar>
+						{{ service.Category }} service
+					</m3e-list-item>
+				</m3e-list>
 			</m3e-expansion-panel>
 		</div>
 	</m3e-card>

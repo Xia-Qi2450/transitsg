@@ -11,6 +11,10 @@ const props = defineProps<{
 
 const { stops } = toRefs(props);
 
+const emit = defineEmits<{
+	location: [];
+}>();
+
 const route = useRoute();
 
 const { settings, refreshPreciseLocation, setPreciseLocationStatus } = useSettings();
@@ -64,6 +68,7 @@ async function enablePreciseLocation() {
 	const location = await getCurrentLocation();
 	if (location) {
 		await setPreciseLocationStatus(true);
+		emit('location');
 	} else {
 		M3eSnackbar.open('Geolocation API not supported by browser');
 		await setPreciseLocationStatus(false);

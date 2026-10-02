@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { BusStop } from '~/types/BusStop';
+import type { BusStop } from '~~/shared/types/BusStop';
 
 const props = defineProps<{
 	stop: BusStop;
