@@ -41,7 +41,7 @@ async function cacheBusRoutes() {
 		console.log(`log: fetched ${allRoutes.length} routes`);
 	} while (fetchedCount === 500);
 
-	const outputPath = path.join(process.cwd(), 'public/bus-routes.json');
+	const outputPath = path.join(process.cwd(), 'server/assets/bus-routes.json');
 	await fs.writeFile(outputPath, JSON.stringify(allRoutes));
 	console.info(`info: fetched and cached ${allRoutes.length} routes`);
 }

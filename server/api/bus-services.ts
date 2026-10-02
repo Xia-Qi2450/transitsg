@@ -1,4 +1,4 @@
-import busServices from '~~/public/bus-services.json';
+import busServices from '../assets/bus-services.json';
 
 export default defineEventHandler((event) => {
 	const { service } = getQuery<{

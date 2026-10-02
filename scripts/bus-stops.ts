@@ -57,7 +57,7 @@ async function cacheBusStops() {
 		})),
 	};
 
-	const outputPath = path.join(process.cwd(), 'public/bus-stops.json');
+	const outputPath = path.join(process.cwd(), 'server/assets/bus-stops.json');
 	await fs.writeFile(outputPath, JSON.stringify(geojson));
 	console.info(`info: fetched and cached ${allStops.length} stops`);
 }
