@@ -6,7 +6,7 @@ import type { BusStop } from '~~/shared/types/BusStop';
 definePageMeta({
 	title: 'Bus Service',
 	name: 'bus-service',
-	alias: '/service',
+	alias: '/services',
 });
 
 const router = useRouter();
