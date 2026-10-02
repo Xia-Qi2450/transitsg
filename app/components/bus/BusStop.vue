@@ -138,6 +138,7 @@ onBeforeUnmount(() => {
 					<m3e-list-action
 						v-for="arrival in visibleArrivals"
 						:key="arrival.ServiceNo"
+						v-vibrate
 						@click="
 							router.push({
 								name: 'bus-service',
@@ -164,8 +165,35 @@ onBeforeUnmount(() => {
 								>, {{ timeToArrival(arrival.NextBus3.EstimatedArrival, now) }}</span
 							>
 						</span>
+
+						<m3e-icon-button
+							:id="`destination-button-${arrival.ServiceNo}`"
+							slot="trailing"
+							v-vibrate
+						>
+							<Icon
+								name="material-symbols:bus-map-pin-outline"
+								@click.stop="
+									router.push({
+										name: 'bus-stop',
+										params: {
+											stop: arrival.NextBus.DestinationCode,
+										},
+									})
+								"
+							/>
+						</m3e-icon-button>
+						<m3e-tooltip :for="`destination-button-${arrival.ServiceNo}`"
+							>Open destination stop</m3e-tooltip
+						>
 					</m3e-list-action>
 				</m3e-action-list>
+				<div v-else-if="arrivals" class="loading-container">
+					<m3e-avatar>
+						<Icon name="material-symbols:bus-alert-outline" />
+					</m3e-avatar>
+					<span>No arrivals</span>
+				</div>
 				<div v-else class="loading-container">
 					<m3e-loading-indicator />
 				</div>
@@ -212,9 +240,11 @@ onBeforeUnmount(() => {
 
 .loading-container {
 	display: flex;
+	flex-direction: column;
 	width: 100%;
 	align-items: center;
 	justify-content: center;
+	gap: 8px;
 }
 
 .bus-number {

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { vibrate } from '~/plugins/vibrate.client';
 import type { BusStop } from '~~/shared/types/BusStop';
 
 const props = defineProps<{
@@ -9,6 +10,8 @@ const { stops } = toRefs(props);
 
 const route = useRoute();
 
+const router = useRouter();
+
 const services = ref<BusService[]>([]);
 
 async function fetchRouteInfo(serviceNumber: string) {
@@ -16,6 +19,15 @@ async function fetchRouteInfo(serviceNumber: string) {
 		method: 'GET',
 		query: {
 			service: serviceNumber,
+		},
+	});
+}
+
+function goToStop(code: string) {
+	router.push({
+		name: 'bus-stop',
+		params: {
+			stop: code,
 		},
 	});
 }
@@ -43,15 +55,22 @@ onMounted(async () => {
 				v-for="service in services"
 				:key="`${service.ServiceNo}-${service.Direction}`"
 				class="service-panel"
+				@opening="vibrate()"
 			>
 				<span slot="header">For {{ getStopName(stops, service.DestinationCode) }}</span>
-				<m3e-list>
-					<m3e-list-item>
+				<m3e-list variant="segmented">
+					<m3e-list-action v-vibrate @click="goToStop(service.DestinationCode)">
+						<m3e-avatar slot="leading">
+							<Icon name="material-symbols:pin-drop-outline" />
+						</m3e-avatar>
+						To {{ getStopName(stops, service.DestinationCode) }}
+					</m3e-list-action>
+					<m3e-list-action v-vibrate @click="goToStop(service.OriginCode)">
 						<m3e-avatar slot="leading">
 							<Icon name="material-symbols:pin-drop-outline" />
 						</m3e-avatar>
 						From {{ getStopName(stops, service.OriginCode) }}
-					</m3e-list-item>
+					</m3e-list-action>
 					<m3e-list-item>
 						<m3e-avatar slot="leading">
 							<Icon name="material-symbols:bus-railway-outline" />

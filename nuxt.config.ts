@@ -84,7 +84,7 @@ export default defineNuxtConfig({
 		workbox: {
 			globPatterns: ['**/*.{html,css,js,png,svg,ico,json}'],
 			globDirectory: 'dist',
-			cacheId: 'v1.0.1',
+			cacheId: '1',
 			cleanupOutdatedCaches: true,
 			clientsClaim: true,
 			skipWaiting: true,
