@@ -19,6 +19,10 @@ const searchInput = useTemplateRef<HTMLInputElement>('searchInput');
 
 const searchSuggestions = ref<BusStop[]>([]);
 
+const routePath = computed(() => {
+	return route.path.toLowerCase() || '';
+});
+
 async function startSearch() {
 	searchSuggestions.value = await searchBusStops(allStops.value, searchInput.value?.value || '');
 }
@@ -32,9 +36,11 @@ function goToStop(code: string) {
 	});
 }
 
-const routePath = computed(() => {
-	return route.path.toLowerCase() || '';
-});
+function goToRoute(name: string) {
+	router.push({
+		name: name,
+	});
+}
 </script>
 
 <template>
@@ -70,7 +76,7 @@ const routePath = computed(() => {
 					<m3e-nav-item
 						v-vibrate
 						:selected.prop="routePath === '/'"
-						@click="router.push('/')"
+						@click="goToRoute('home')"
 					>
 						<Icon slot="icon" name="material-symbols:home-outline" />
 						Home
@@ -80,7 +86,7 @@ const routePath = computed(() => {
 						:selected.prop="
 							routePath.startsWith('/bus') || routePath.startsWith('/stop')
 						"
-						@click="router.push('/bus')"
+						@click="goToRoute('bus-stop')"
 					>
 						<Icon slot="icon" name="material-symbols:bus-map-pin-outline" />
 						Stops
@@ -90,7 +96,7 @@ const routePath = computed(() => {
 						:selected.prop="
 							routePath.startsWith('/services') || routePath.startsWith('/service')
 						"
-						@click="router.push('/service')"
+						@click="goToRoute('bus-service')"
 					>
 						<Icon slot="icon" name="material-symbols:directions-bus-outline" />
 						Services
@@ -98,7 +104,7 @@ const routePath = computed(() => {
 					<m3e-nav-item
 						v-vibrate
 						:selected.prop="routePath.startsWith('/mrt')"
-						@click="router.push('/mrt')"
+						@click="goToRoute('mrt')"
 					>
 						<Icon slot="icon" name="material-symbols:train-outline" />
 						MRT
@@ -106,16 +112,14 @@ const routePath = computed(() => {
 				</m3e-nav-rail>
 			</ClientOnly>
 
-			<NuxtLayout>
-				<NuxtPage :page-key="(route) => route.name as string" class="page" />
-			</NuxtLayout>
+			<NuxtPage :page-key="(route) => route.name as string" class="page" />
 
 			<ClientOnly>
 				<m3e-nav-bar class="nav-bar" mode="compact">
 					<m3e-nav-item
 						v-vibrate
 						:selected.prop="routePath === '/'"
-						@click="router.push('/')"
+						@click="goToRoute('home')"
 					>
 						<Icon slot="icon" name="material-symbols:home-outline" />
 						Home
@@ -125,7 +129,7 @@ const routePath = computed(() => {
 						:selected.prop="
 							routePath.startsWith('/bus') || routePath.startsWith('/stop')
 						"
-						@click="router.push('/bus')"
+						@click="goToRoute('bus-stop')"
 					>
 						<Icon slot="icon" name="material-symbols:bus-map-pin-outline" />
 						Stops
@@ -135,7 +139,7 @@ const routePath = computed(() => {
 						:selected.prop="
 							routePath.startsWith('/services') || routePath.startsWith('/service')
 						"
-						@click="router.push('/services')"
+						@click="goToRoute('bus-service')"
 					>
 						<Icon slot="icon" name="material-symbols:directions-bus-outline" />
 						Services
@@ -143,7 +147,7 @@ const routePath = computed(() => {
 					<m3e-nav-item
 						v-vibrate
 						:selected.prop="routePath.startsWith('/mrt')"
-						@click="router.push('/mrt')"
+						@click="goToRoute('mrt')"
 					>
 						<Icon slot="icon" name="material-symbols:train-outline" />
 						MRT

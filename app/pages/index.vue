@@ -7,6 +7,7 @@ import type { TrainServiceMessage } from '~~/shared/types/TrainServiceMessage';
 
 definePageMeta({
 	title: 'Home',
+	name: 'home',
 });
 
 useSeoMeta({
