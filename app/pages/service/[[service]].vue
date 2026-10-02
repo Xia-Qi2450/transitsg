@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { M3eAutocompleteElement } from '@m3e/web/autocomplete';
 import BusService from '~/components/bus/BusService.vue';
+import { vibrate } from '~/plugins/vibrate.client';
 import type { BusStop } from '~~/shared/types/BusStop';
 
 definePageMeta({
@@ -32,6 +33,7 @@ async function onServiceQuery(el: M3eAutocompleteElement) {
 }
 
 function goToService(el: M3eAutocompleteElement) {
+	vibrate();
 	const service = el.selected?.value;
 	console.log('Navigating to:', service);
 	router.push({

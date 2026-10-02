@@ -167,21 +167,20 @@ onBeforeUnmount(() => {
 						</span>
 
 						<m3e-icon-button
+							v-if="arrival.NextBus.DestinationCode"
 							:id="`destination-button-${arrival.ServiceNo}`"
 							slot="trailing"
 							v-vibrate
+							@click.stop="
+								router.push({
+									name: 'bus-stop',
+									params: {
+										stop: arrival.NextBus.DestinationCode,
+									},
+								})
+							"
 						>
-							<Icon
-								name="material-symbols:bus-map-pin-outline"
-								@click.stop="
-									router.push({
-										name: 'bus-stop',
-										params: {
-											stop: arrival.NextBus.DestinationCode,
-										},
-									})
-								"
-							/>
+							<Icon name="material-symbols:bus-map-pin-outline" />
 						</m3e-icon-button>
 						<m3e-tooltip :for="`destination-button-${arrival.ServiceNo}`"
 							>Open destination stop</m3e-tooltip
