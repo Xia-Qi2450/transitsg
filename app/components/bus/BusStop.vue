@@ -17,6 +17,8 @@ const emit = defineEmits<{
 
 const route = useRoute();
 
+const router = useRouter();
+
 const { settings, refreshPreciseLocation, setPreciseLocationStatus } = useSettings();
 
 const stopId = computed(() => route.params.stop);
@@ -132,8 +134,19 @@ onBeforeUnmount(() => {
 			<span>{{ stop.road }} ({{ stop.code }})</span>
 			<m3e-expansion-panel class="arrivals-panel" @opening="vibrate()">
 				<span slot="header">Bus arrivals</span>
-				<m3e-list v-if="arrivals && arrivals.length !== 0" variant="segmented">
-					<m3e-list-item v-for="arrival in visibleArrivals" :key="arrival.ServiceNo">
+				<m3e-action-list v-if="arrivals && arrivals.length !== 0" variant="segmented">
+					<m3e-list-action
+						v-for="arrival in visibleArrivals"
+						:key="arrival.ServiceNo"
+						@click="
+							router.push({
+								name: 'bus-service',
+								params: {
+									service: arrival.ServiceNo,
+								},
+							})
+						"
+					>
 						<span>
 							<span class="bus-number">{{ arrival.ServiceNo }}</span>
 							<span>{{ ' ' }}</span>
@@ -151,8 +164,8 @@ onBeforeUnmount(() => {
 								>, {{ timeToArrival(arrival.NextBus3.EstimatedArrival, now) }}</span
 							>
 						</span>
-					</m3e-list-item>
-				</m3e-list>
+					</m3e-list-action>
+				</m3e-action-list>
 				<div v-else class="loading-container">
 					<m3e-loading-indicator />
 				</div>

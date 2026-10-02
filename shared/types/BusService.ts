@@ -1,6 +1,8 @@
+import type { BusOperator } from './BusOperator';
+
 export interface BusService {
 	ServiceNo: string;
-	Operator: string;
+	Operator: BusOperator;
 	Direction: number;
 	Category: string;
 	OriginCode: string;

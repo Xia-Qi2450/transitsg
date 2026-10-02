@@ -56,13 +56,19 @@ onMounted(async () => {
 						<m3e-avatar slot="leading">
 							<Icon name="material-symbols:bus-railway-outline" />
 						</m3e-avatar>
-						Operated by {{ service.Operator }}
+						Operated by {{ getOperatorName(service.Operator) }}
 					</m3e-list-item>
 					<m3e-list-item>
 						<m3e-avatar slot="leading">
 							<Icon name="material-symbols:directions-bus-outline" />
 						</m3e-avatar>
 						{{ service.Category }} service
+					</m3e-list-item>
+					<m3e-list-item v-if="service.LoopDesc">
+						<m3e-avatar slot="leading">
+							<Icon name="material-symbols:repeat-outline" />
+						</m3e-avatar>
+						Loops on {{ service.LoopDesc }}
 					</m3e-list-item>
 				</m3e-list>
 			</m3e-expansion-panel>

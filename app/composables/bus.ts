@@ -1,4 +1,5 @@
-import type { BusStop } from '~/types/BusStop';
+import { vibrate } from '~/plugins/vibrate.client';
+import type { BusStop } from '~~/shared/types/BusStop';
 
 export function useBus() {
 	const route = useRoute();
@@ -22,7 +23,7 @@ export function useBus() {
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	function handleStopClick(e: any) {
-		console.log(e);
+		vibrate();
 
 		const feature = e.features[0];
 		if (!feature) {

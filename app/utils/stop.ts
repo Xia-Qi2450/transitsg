@@ -1,4 +1,4 @@
-import type { BusStop } from '~/types/BusStop';
+import type { BusStop } from '~~/shared/types/BusStop';
 
 export function getStop(stops: BusStop[], code: string): BusStop | null {
 	return stops.find((s) => s.code === code) || null;
