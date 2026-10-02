@@ -1,17 +1,18 @@
 import type { BusRoute } from '~~/shared/types/BusRoute';
-import { join } from 'path';
-import { readFile } from 'fs/promises';
 
 export default defineEventHandler(async (event) => {
 	const { service, direction } = getQuery(event);
-
-	const path = join(process.cwd(), 'server/assets/bus-routes.json');
+	if (!service || !direction) {
+		return [];
+	}
 
 	try {
-		const json = await readFile(path, 'utf-8');
-		const busRoutes = JSON.parse(json);
+		const busRoutes = await useStorage('assets:server').getItem<BusRoute[]>('bus-routes.json');
+		if (!busRoutes) {
+			return [];
+		}
 
-		const stopsForService = (busRoutes as BusRoute[]).filter(
+		const stopsForService = busRoutes.filter(
 			(r) => r.ServiceNo === service && r.Direction.toString() === direction,
 		);
 
