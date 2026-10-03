@@ -79,8 +79,8 @@ const geojson = computed(() => {
 							source="mrt-stations"
 							layer-id="stations"
 							:paint="{
-								'fill-color': ['get', 'bgColor'],
-								'fill-outline-color': ['get', 'textColor'],
+								'fill-color': circleColor,
+								'fill-outline-color': outlineColor,
 							}"
 						/>
 					</MglGeoJsonSource>
