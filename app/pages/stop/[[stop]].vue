@@ -147,12 +147,11 @@ onMounted(async () => {
 						/>
 
 						<MglCircleLayer
-							v-vibrate
 							layer-id="stops"
 							:filter="['!', ['has', 'point_count']]"
 							:paint="{
 								'circle-color': circleColor,
-								'circle-radius': 12,
+								'circle-radius': 16,
 								'circle-stroke-width': 1,
 								'circle-stroke-color': outlineColor,
 							}"

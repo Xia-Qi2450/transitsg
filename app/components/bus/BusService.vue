@@ -8,6 +8,11 @@ const props = defineProps<{
 
 const { stops } = toRefs(props);
 
+const emit = defineEmits<{
+	routeAUpdate: [route: BusRoute[]];
+	routeBUpdate: [route: BusRoute[]];
+}>();
+
 const route = useRoute();
 
 const router = useRouter();
@@ -26,23 +31,25 @@ async function fetchRouteInfo(serviceNumber: string) {
 }
 
 async function fetchRouteA(serviceNumber: string) {
-	routeA.value = await $fetch('/api/bus-service-stops', {
+	routeA.value = await $fetch<BusRoute[]>('/api/bus-service-stops', {
 		method: 'GET',
 		query: {
 			service: serviceNumber,
 			direction: 1,
 		},
 	});
+	emit('routeAUpdate', routeA.value);
 }
 
 async function fetchRouteB(serviceNumber: string) {
-	routeB.value = await $fetch('/api/bus-service-stops', {
+	routeB.value = await $fetch<BusRoute[]>('/api/bus-service-stops', {
 		method: 'GET',
 		query: {
 			service: serviceNumber,
 			direction: 2,
 		},
 	});
+	emit('routeBUpdate', routeB.value);
 }
 
 function goToStop(code: string) {

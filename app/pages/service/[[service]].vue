@@ -12,10 +12,51 @@ definePageMeta({
 
 const router = useRouter();
 
+const { style, zoom, center, circleColor, outlineColor, textColor, handleStopClick } = useBus();
+
 const serviceInput = useTemplateRef<HTMLInputElement>('serviceInput');
 
 const serviceResults = ref<string[]>([]);
 const stops = ref<BusStop[]>([]);
+const routeA = ref<BusRoute[] | null>(null);
+const routeB = ref<BusRoute[] | null>(null);
+const geojson = ref<Geojson | null>(null);
+
+const routeAMap = computed(() => routeA.value?.map((r) => r.BusStopCode));
+const routeBMap = computed(() => routeB.value?.map((r) => r.BusStopCode));
+
+const geojsonRouteOnly = computed<Geojson>(() => {
+	const featuresA =
+		geojson.value?.features
+			.filter((f) => routeAMap.value?.includes(f.properties.code))
+			.reverse()
+			.map((feature, idx) => {
+				return {
+					...feature,
+					properties: {
+						...feature.properties,
+						index: `#${idx + 1}`,
+					},
+				};
+			}) || [];
+
+	const featuresB =
+		geojson.value?.features
+			.filter((f) => routeBMap.value?.includes(f.properties.code))
+			.map((feature, idx) => {
+				return {
+					...feature,
+					properties: {
+						...feature.properties,
+						index: `#${idx + 1}`,
+					},
+				};
+			}) || [];
+	return {
+		type: 'FeatureCollection',
+		features: [...featuresA, ...featuresB],
+	};
+});
 
 async function onServiceQuery(el: M3eAutocompleteElement) {
 	el.loading = true;
@@ -44,13 +85,20 @@ function goToService(el: M3eAutocompleteElement) {
 	});
 }
 
+function onRouteAUpdate(route: BusRoute[]) {
+	routeA.value = route;
+}
+
+function onRouteBUpdate(route: BusRoute[]) {
+	routeB.value = route;
+}
+
 onMounted(async () => {
-	stops.value =
-		(
-			await $fetch<Geojson>('/api/bus-stops', {
-				method: 'GET',
-			})
-		).features?.map((f) => f.properties) ?? [];
+	geojson.value = await $fetch<Geojson>('/api/bus-stops', {
+		method: 'GET',
+	});
+
+	stops.value = geojson.value.features?.map((f) => f.properties) ?? [];
 });
 </script>
 
@@ -79,7 +127,67 @@ onMounted(async () => {
 					</m3e-autocomplete>
 				</div>
 			</m3e-card>
-			<BusService v-if="stops" :stops="stops" />
+			<BusService
+				v-if="stops"
+				:stops="stops"
+				@route-a-update="onRouteAUpdate"
+				@route-b-update="onRouteBUpdate"
+			/>
+			<ClientOnly>
+				<MglMap :map-style="style" :center="center" :zoom="zoom">
+					<MglGeoJsonSource
+						source-id="stops"
+						:data="toRaw(geojsonRouteOnly)"
+						:cluster="true"
+						:cluster-radius="24"
+					>
+						<MglCircleLayer
+							layer-id="stops-cluster"
+							:filter="['has', 'point_count']"
+							:paint="{
+								'circle-color': circleColor,
+								'circle-radius': 12,
+								'circle-stroke-width': 1,
+								'circle-stroke-color': outlineColor,
+							}"
+						/>
+						<MglSymbolLayer
+							layer-id="stops-cluster-count"
+							:filter="['has', 'point_count']"
+							:layout="{
+								'text-field': '{point_count_abbreviated}',
+								'text-size': 12,
+							}"
+							:paint="{
+								'text-color': textColor,
+							}"
+						/>
+
+						<MglCircleLayer
+							layer-id="stops"
+							:filter="['!', ['has', 'point_count']]"
+							:paint="{
+								'circle-color': circleColor,
+								'circle-radius': 16,
+								'circle-stroke-width': 1,
+								'circle-stroke-color': outlineColor,
+							}"
+							@click="handleStopClick"
+						/>
+						<MglSymbolLayer
+							layer-id="stops-index"
+							:filter="['!', ['has', 'point_count']]"
+							:layout="{
+								'text-field': ['get', 'index'],
+								'text-size': 12,
+							}"
+							:paint="{
+								'text-color': textColor,
+							}"
+						/>
+					</MglGeoJsonSource>
+				</MglMap>
+			</ClientOnly>
 		</div>
 	</div>
 </template>
@@ -124,5 +232,13 @@ onMounted(async () => {
 
 .service-field {
 	margin: 4px 0;
+}
+</style>
+
+<style lang="css">
+.maplibregl-map {
+	border-radius: 16px;
+	min-height: 50svh;
+	box-sizing: border-box;
 }
 </style>
