@@ -4,6 +4,7 @@ import type { BusStop } from '~~/shared/types/BusStop';
 import { M3eSnackbar } from '@m3e/web/snackbar';
 import { useSettings } from '~/composables/settings';
 import { vibrate } from '~/plugins/vibrate.client';
+import { shareBusStop } from '~/utils/stop';
 
 const props = defineProps<{
 	stops: BusStop[];
@@ -153,10 +154,15 @@ onBeforeUnmount(() => {
 	<m3e-card v-if="stop">
 		<div slot="header" class="header">
 			<m3e-heading variant="title" size="large">{{ stop.name }}</m3e-heading>
-			<m3e-icon-button v-vibrate @click="togglePin()">
-				<Icon v-if="isPinned" name="material-symbols:keep" />
-				<Icon v-else name="material-symbols:keep-outline" />
-			</m3e-icon-button>
+			<div class="header-actions">
+				<m3e-icon-button v-vibrate @click="togglePin()">
+					<Icon v-if="isPinned" name="material-symbols:keep" />
+					<Icon v-else name="material-symbols:keep-outline" />
+				</m3e-icon-button>
+				<m3e-icon-button v-vibrate @click="shareBusStop(stop)">
+					<Icon name="material-symbols:share-outline" />
+				</m3e-icon-button>
+			</div>
 		</div>
 		<div slot="content" class="content">
 			<span>{{ stop.road }} ({{ stop.code }})</span>
@@ -307,6 +313,13 @@ onBeforeUnmount(() => {
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
+}
+
+.header-actions {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: right;
 }
 
 .trailing {
