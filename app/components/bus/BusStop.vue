@@ -136,14 +136,7 @@ onMounted(async () => {
 
 	timeInterval = setInterval(async () => {
 		now.value = Date.now();
-
-		const includesPastArrival = arrivals.value.some((a) => {
-			return hasPassedArrival(a);
-		});
-
-		if (includesPastArrival && stop.value) {
-			await refreshArrivals(stop.value);
-		}
+		if (stop.value) await refreshArrivals(stop.value);
 	}, 30000);
 });
 

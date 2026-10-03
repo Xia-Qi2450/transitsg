@@ -10,6 +10,34 @@ definePageMeta({
 	alias: '/services',
 });
 
+const route = useRoute();
+
+const serviceNumber = ref<string | null>(
+	typeof route.params.service === 'string' ? route.params.service : null,
+);
+
+useSeoMeta({
+	title: () => (serviceNumber.value ? `Bus Service ${serviceNumber.value}` : 'Bus Services'),
+	description: () =>
+		serviceNumber.value
+			? `View bus service ${serviceNumber.value} on transitsg, a free and open-source web app made by (ing) Studios.`
+			: 'Check bus services on transitsg, a free and open-source web app made by (ing) Studios.',
+	ogTitle: () =>
+		serviceNumber.value ? `${serviceNumber.value} | transitsg` : 'Bus Services | transitsg',
+	ogUrl: () =>
+		serviceNumber.value
+			? `https://transitsg.ingstudios.dev/service/${serviceNumber.value}`
+			: 'https://transitsg.ingstudios.dev/service',
+	ogDescription: () =>
+		serviceNumber.value
+			? `View bus stop ${serviceNumber.value} on transitsg, a free and open-source web app made by (ing) Studios.`
+			: 'Check bus timings and bus stops on transitsg, a free and open-source web app made by (ing) Studios.',
+	ogImage: 'https://transitsg.ingstudios.dev/og_bus.png',
+	ogImageWidth: 1200,
+	ogImageHeight: 630,
+	ogSiteName: 'transitsg - all your Singapore transit needs in one app',
+});
+
 const router = useRouter();
 
 const { style, zoom, center, circleColor, outlineColor, textColor, handleStopClick } = useBus();

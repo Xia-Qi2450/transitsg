@@ -26,7 +26,10 @@ async function fetchGtfsUrl(): Promise<string> {
 
 	const data: GftsFetchResponse = await response.json();
 
-	return data.value[0].link;
+	const link = data.value[0].link;
+	console.log('log: link:', link);
+
+	return link;
 }
 
 async function fetchGtfsZip(url: string) {

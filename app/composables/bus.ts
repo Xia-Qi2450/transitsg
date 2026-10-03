@@ -51,9 +51,7 @@ export function useBus() {
 			const primaryVar = style.getPropertyValue('--md-sys-color-primary').trim();
 			const outlineVar = style.getPropertyValue('--md-sys-color-outline').trim();
 			const onPrimaryVar = style.getPropertyValue('--md-sys-color-on-primary').trim();
-			const surfaceContainerVar = style
-				.getPropertyValue('--md-sys-color-surface-container')
-				.trim();
+			const tertiaryVar = style.getPropertyValue('--md-sys-color-surface-container').trim();
 			const onSurfaceVar = style.getPropertyValue('--md-sys-color-on-surface').trim();
 
 			if (primaryVar) {
@@ -76,9 +74,9 @@ export function useBus() {
 				textColor.value = onSurfaceVar;
 			}
 
-			if (surfaceContainerVar) {
-				console.log('Surface container variable:', surfaceContainerVar);
-				circleColor.value = surfaceContainerVar;
+			if (tertiaryVar) {
+				console.log('Surface container variable:', tertiaryVar);
+				circleColor.value = tertiaryVar;
 			}
 		}
 	});
