@@ -214,6 +214,8 @@ onMounted(async () => {
 							}"
 						/>
 					</MglGeoJsonSource>
+
+					<MglNavigationControl />
 				</MglMap>
 			</ClientOnly>
 		</div>
