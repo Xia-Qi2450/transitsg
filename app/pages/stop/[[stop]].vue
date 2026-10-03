@@ -17,8 +17,20 @@ const allStops = computed(() => {
 
 const map = useTemplateRef('map');
 
-const { route, style, zoom, center, circleColor, outlineColor, textColor, handleStopClick } =
-	useBus();
+const {
+	route,
+	style,
+	zoom,
+	center,
+	circleColor,
+	outlineColor,
+	textColor,
+	busColor,
+	busTextColor,
+	handleStopClick,
+} = useBus();
+
+const { arrivalsGeojson } = useArrivals();
 
 const stopId = computed(() => (typeof route.params.stop === 'string' ? route.params.stop : null));
 
@@ -158,6 +170,29 @@ onMounted(async () => {
 							@click="handleStopClick"
 						/>
 					</MglGeoJsonSource>
+
+					<MglGeoJsonSource source-id="buses" :data="toRaw(arrivalsGeojson)">
+						<MglCircleLayer
+							layer-id="bus"
+							:paint="{
+								'circle-color': busColor,
+								'circle-radius': 12,
+								'circle-stroke-width': 1,
+								'circle-stroke-color': outlineColor,
+							}"
+						/>
+						<MglSymbolLayer
+							layer-id="bus-number"
+							:layout="{
+								'text-field': ['get', 'bus'],
+								'text-size': 12,
+							}"
+							:paint="{
+								'text-color': busTextColor,
+							}"
+						/>
+					</MglGeoJsonSource>
+
 					<MglNavigationControl />
 				</MglMap>
 			</ClientOnly>

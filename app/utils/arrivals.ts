@@ -1,4 +1,5 @@
 import { formatDistance } from 'date-fns';
+import type { BusType } from '~~/shared/types/BusType';
 
 export function timeToArrival(arrival: string, now: number): string {
 	console.log('Arrival:', arrival);
@@ -9,4 +10,18 @@ export function timeToArrival(arrival: string, now: number): string {
 		addSuffix: true,
 	});
 	return distance;
+}
+
+export function getBusType(type: BusType): string {
+	switch (type) {
+		case 'SD': {
+			return 'Single deck';
+		}
+		case 'DD': {
+			return 'Double deck';
+		}
+		case 'BD': {
+			return 'Bendy';
+		}
+	}
 }

@@ -21,6 +21,8 @@ const router = useRouter();
 
 const { settings, refreshPreciseLocation, setPreciseLocationStatus } = useSettings();
 
+const { arrivals: arr } = useArrivals();
+
 const stopId = computed(() => route.params.stop);
 
 const stop = ref<BusStop | null>(null);
@@ -87,6 +89,39 @@ watch(
 	},
 	{ immediate: true },
 );
+
+watch(arrivals, (newArrivals) => {
+	arr.value = newArrivals.flatMap((a) => {
+		const arrivals = [];
+
+		if (a.NextBus) {
+			arrivals.push({
+				bus: a.ServiceNo,
+				lng: a.NextBus.Longitude,
+				lat: a.NextBus.Latitude,
+			});
+		}
+
+		if (a.NextBus2) {
+			arrivals.push({
+				bus: a.ServiceNo,
+				lng: a.NextBus2.Longitude,
+				lat: a.NextBus2.Latitude,
+			});
+		}
+
+		if (a.NextBus3) {
+			arrivals.push({
+				bus: a.ServiceNo,
+				lng: a.NextBus3.Longitude,
+				lat: a.NextBus3.Latitude,
+			});
+		}
+
+		return arrivals;
+	});
+	console.log('Arrivals before geojson:', arr.value);
+});
 
 onBeforeRouteUpdate((to) => {
 	if (typeof to.params.stop === 'string') {
@@ -166,25 +201,37 @@ onBeforeUnmount(() => {
 							>
 						</span>
 
-						<m3e-icon-button
-							v-if="arrival.NextBus.DestinationCode"
-							:id="`destination-button-${arrival.ServiceNo}`"
-							slot="trailing"
-							v-vibrate
-							@click.stop="
-								router.push({
-									name: 'bus-stop',
-									params: {
-										stop: arrival.NextBus.DestinationCode,
-									},
-								})
-							"
-						>
-							<Icon name="material-symbols:bus-map-pin-outline" />
-						</m3e-icon-button>
-						<m3e-tooltip :for="`destination-button-${arrival.ServiceNo}`"
-							>Open destination stop</m3e-tooltip
-						>
+						<div slot="trailing" class="trailing">
+							<m3e-avatar
+								v-if="arrival.NextBus.Type"
+								:id="`next-bus-${arrival.ServiceNo}`"
+								class="type-avatar"
+							>
+								{{ arrival.NextBus.Type }}
+							</m3e-avatar>
+							<m3e-tooltip :for="`next-bus-${arrival.ServiceNo}`">{{
+								getBusType(arrival.NextBus.Type)
+							}}</m3e-tooltip>
+
+							<m3e-icon-button
+								v-if="arrival.NextBus.DestinationCode"
+								:id="`destination-button-${arrival.ServiceNo}`"
+								v-vibrate
+								@click.stop="
+									router.push({
+										name: 'bus-stop',
+										params: {
+											stop: arrival.NextBus.DestinationCode,
+										},
+									})
+								"
+							>
+								<Icon name="material-symbols:bus-map-pin-outline" />
+							</m3e-icon-button>
+							<m3e-tooltip :for="`destination-button-${arrival.ServiceNo}`"
+								>Open destination stop</m3e-tooltip
+							>
+						</div>
 					</m3e-list-action>
 				</m3e-action-list>
 				<div v-else-if="arrivals" class="loading-container">
@@ -267,5 +314,18 @@ onBeforeUnmount(() => {
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
+}
+
+.trailing {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: right;
+	gap: 8px;
+}
+
+.type-avatar {
+	--m3e-avatar-color: var(--md-sys-color-surface-container);
+	--m3e-avatar-label-color: var(--md-sys-color-on-surface-container);
 }
 </style>

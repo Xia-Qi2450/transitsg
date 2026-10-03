@@ -17,9 +17,11 @@ export function useBus() {
 		lat: 1.2897,
 	});
 
-	const circleColor = ref<string>('#006A66');
+	const circleColor = ref<string>('#E9EFEE');
 	const outlineColor = ref<string>('#6F7978');
-	const textColor = ref<string>('#ffffff');
+	const textColor = ref<string>('#161D1C');
+	const busColor = ref<string>('#006A66');
+	const busTextColor = ref<string>('#ffffff');
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	function handleStopClick(e: any) {
@@ -49,10 +51,19 @@ export function useBus() {
 			const primaryVar = style.getPropertyValue('--md-sys-color-primary').trim();
 			const outlineVar = style.getPropertyValue('--md-sys-color-outline').trim();
 			const onPrimaryVar = style.getPropertyValue('--md-sys-color-on-primary').trim();
+			const surfaceContainerVar = style
+				.getPropertyValue('--md-sys-color-surface-container')
+				.trim();
+			const onSurfaceVar = style.getPropertyValue('--md-sys-color-on-surface').trim();
 
 			if (primaryVar) {
 				console.log('Primary variable:', primaryVar);
-				circleColor.value = primaryVar;
+				busColor.value = primaryVar;
+			}
+
+			if (onPrimaryVar) {
+				console.log('On primary variable:', onPrimaryVar);
+				busTextColor.value = onPrimaryVar;
 			}
 
 			if (outlineVar) {
@@ -60,9 +71,14 @@ export function useBus() {
 				outlineColor.value = outlineVar;
 			}
 
-			if (onPrimaryVar) {
-				console.log('On primary variable:', onPrimaryVar);
-				textColor.value = onPrimaryVar;
+			if (onSurfaceVar) {
+				console.log('On surface variable:', onSurfaceVar);
+				textColor.value = onSurfaceVar;
+			}
+
+			if (surfaceContainerVar) {
+				console.log('Surface container variable:', surfaceContainerVar);
+				circleColor.value = surfaceContainerVar;
 			}
 		}
 	});
@@ -75,6 +91,8 @@ export function useBus() {
 		circleColor,
 		outlineColor,
 		textColor,
+		busColor,
+		busTextColor,
 		handleStopClick,
 	};
 }

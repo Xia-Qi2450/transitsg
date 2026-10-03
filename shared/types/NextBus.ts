@@ -1,3 +1,6 @@
+import type { BusLoad } from './BusLoad';
+import type { BusType } from './BusType';
+
 export interface NextBus {
 	OriginCode: string;
 	DestinationCode: string;
@@ -6,7 +9,7 @@ export interface NextBus {
 	Latitude: string;
 	Longitude: string;
 	VisitNumber: string;
-	Load: string;
+	Load: BusLoad;
 	Feature: string;
-	Type: string;
+	Type: BusType;
 }
