@@ -9,6 +9,7 @@ import type { GtfsStopTime } from './types/GtfsStopTime';
 import type { GtfsData } from './types/GtfsData';
 import fs from 'fs/promises';
 import path from 'path';
+import JSZip from 'jszip';
 
 export async function cacheGtfsData() {
 	const url = await fetchGtfsUrl();
@@ -108,10 +109,23 @@ async function createGtfsObject(gtfsData: GtfsDataRaw): Promise<GtfsData> {
 }
 
 async function cacheGtfsFile(gtfsData: GtfsData) {
-	const json = JSON.stringify(gtfsData);
-	const outputPath = path.join(process.cwd(), 'server/assets/gtfs-schedule-train.json');
-	await fs.writeFile(outputPath, json);
-	console.info('info: successfully cache gtfs json');
+	const zip = zipGtfsJson(gtfsData);
+	const content = await zip.generateAsync({
+		type: 'nodebuffer',
+	});
+	const outputPath = path.join(process.cwd(), 'server/assets/gtfs-schedule-train.zip');
+	await fs.writeFile(outputPath, content);
+	console.info(`info: successfully cached gtfs zip of ${content.byteLength / 1048576} mb`);
+}
+
+function zipGtfsJson(gtfsData: GtfsData): JSZip {
+	const zip = new JSZip();
+	zip.file('gtfs-data.json', JSON.stringify(gtfsData), {
+		compression: 'DEFLATE',
+		compressionOptions: { level: 9 },
+	});
+	console.log('log: successfully zipped json file');
+	return zip;
 }
 
 cacheGtfsData();

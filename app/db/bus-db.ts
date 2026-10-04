@@ -1,5 +1,5 @@
 import { openDB, type IDBPDatabase } from 'idb';
-import type { BusStop } from '~/types/BusStop';
+import type { BusStop } from '~~/shared/types/BusStop';
 
 async function getDb(): Promise<IDBPDatabase<unknown>> {
 	const dbName = 'bus';
@@ -22,17 +22,20 @@ async function getDb(): Promise<IDBPDatabase<unknown>> {
 }
 
 export async function getPinnedBusStops(): Promise<BusStop[]> {
+	if (!import.meta.client) return [];
 	const db = await getDb();
 	const pinned = db.getAll('pinnedBusStops');
 	return pinned || [];
 }
 
 export async function addPinnedBusStop(stop: BusStop) {
+	if (!import.meta.client) return [];
 	const db = await getDb();
 	db.add('pinnedBusStops', stop);
 }
 
 export async function deletePinnedBusStop(code: string) {
+	if (!import.meta.client) return [];
 	const db = await getDb();
 	db.delete('pinnedBusStops', code);
 }

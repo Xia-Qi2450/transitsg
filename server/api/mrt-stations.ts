@@ -1,13 +1,13 @@
-import type { GtfsData } from '~~/shared/types/GtfsData';
+import { unzipGtfsData } from '../utils/zip';
 
 export default defineEventHandler(async () => {
 	try {
-		const gtfsData = await useStorage('assets:server').getItem<GtfsData>(
-			'gtfs-schedule-train.json',
-		);
-		if (!gtfsData) {
+		const zipData = await useStorage('assets:server').getItemRaw('gtfs-schedule-train.zip');
+		if (!zipData) {
 			return [];
 		}
+
+		const gtfsData = await unzipGtfsData(zipData);
 
 		const stops = gtfsData.stops;
 

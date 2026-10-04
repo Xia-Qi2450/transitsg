@@ -28,6 +28,7 @@
 		"eslint": "^10.11.0",
 		"gtfs-realtime-bindings": "^2.2.0",
 		"idb": "^8.0.3",
+		"jszip": "^3.10.2",
 		"nuxt": "^4.5.2",
 		"nuxt-maplibre": "^1.2.2",
 		"unzipper": "^0.12.5",
